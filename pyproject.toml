@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "license-drift"
+dynamic = ["version"]
+description = "Detect license drift across your dependency tree — incompatible licenses, license changes between versions, missing declarations"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [{name = "Yunare Maia", email = "yunare@gmail.com"}]
+keywords = ["license", "compliance", "drift", "sbom", "supply-chain", "dependencies"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: System :: Systems Administration",
+]
+
+[project.scripts]
+license-drift = "license_drift.cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/yunaremaia/license-drift"
+Issues = "https://github.com/yunaremaia/license-drift/issues"
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
