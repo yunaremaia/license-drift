@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 import tempfile
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from license_drift.cli import (
     FindingKind,
     Severity,
     check_compatibility,
+    cli,
     load_requirements_txt,
     run_drift_checks,
     scan_cargo_toml,
@@ -25,22 +27,27 @@ class TestCheckCompatibility:
     def test_mit_compatible_with_mit(self):
         ok, reason = check_compatibility("MIT", "MIT")
         assert ok
+        assert reason == "MIT is compatible with MIT"
 
     def test_mit_incompatible_with_gpl3(self):
         ok, reason = check_compatibility("GPL-3.0", "MIT")
         assert not ok
+        assert "GPL-3.0 is NOT compatible with MIT" in reason
 
     def test_apache2_compatible_with_gpl3(self):
         ok, reason = check_compatibility("GPL-3.0", "Apache-2.0")
         assert ok
+        assert reason == "GPL-3.0 is compatible with Apache-2.0"
 
     def test_mit_compatible_with_apache2(self):
         ok, reason = check_compatibility("Apache-2.0", "MIT")
         assert ok
+        assert reason == "Apache-2.0 is compatible with MIT"
 
     def test_unknown_license_returns_incompatible(self):
         ok, reason = check_compatibility("Custom-License", "MIT")
         assert not ok
+        assert reason == "Unknown compatibility: Custom-License with project MIT"
 
     def test_normalize_license_aliases(self):
         from license_drift.cli import _normalize_license
@@ -206,22 +213,29 @@ class TestRunDriftChecks:
 
 class TestCli:
     def test_scan_empty_project(self):
-        from license_drift.cli import cli
-        import sys
         with tempfile.TemporaryDirectory() as td:
             old_argv = sys.argv
             try:
                 sys.argv = ["license-drift", "scan", td, "--project-license", "MIT"]
                 with pytest.raises(SystemExit) as exc_info:
                     cli()
-                # Should exit 0 (no findings or just warning about no manifest)
-                assert exc_info.value.code in (0, 2)
+                # An empty directory has no manifest: a warning, but not a failure.
+                assert exc_info.value.code == 0
             finally:
                 sys.argv = old_argv
 
+    def test_scan_missing_directory_exits_two(self, capsys):
+        old_argv = sys.argv
+        try:
+            sys.argv = ["license-drift", "scan", "/nonexistent/path/xyz", "--project-license", "MIT"]
+            with pytest.raises(SystemExit) as exc_info:
+                cli()
+            assert exc_info.value.code == 2
+        finally:
+            sys.argv = old_argv
+        assert "not a directory" in capsys.readouterr().err
+
     def test_help(self):
-        from license_drift.cli import cli
-        import sys
         old_argv = sys.argv
         try:
             sys.argv = ["license-drift", "--help"]

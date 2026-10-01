@@ -273,7 +273,7 @@ def load_requirements_txt(path: Path) -> list[dict[str, Any]]:
     deps: list[dict[str, Any]] = []
     for line in path.read_text().splitlines():
         line = line.strip()
-        if not line or line.startswith("#") or line.startswith("-"):
+        if not line or line.startswith(("#", "-")):
             continue
         for sep in ("==", ">=", "~=", "=="):
             if sep in line:
