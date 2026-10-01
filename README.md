@@ -1,5 +1,10 @@
 # license-drift
 
+![CI](https://github.com/yunaremaia/license-drift/actions/workflows/ci.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.10-blue.svg)
+![License](https://img.shields.io/github/license/yunaremaia/license-drift)
+
+
 **Detect license drift across your dependency tree.**
 
 `license-drift` is a CLI tool that identifies three categories of license problems in your project's dependencies:
@@ -156,6 +161,19 @@ The built-in compatibility matrix covers common SPDX license identifiers:
 - [ ] Pre-commit hook packaging
 - [ ] Caching layer for repeated scans
 - [ ] SPDX SBOM generation from scan results
+
+
+If this tool is useful to you, a star helps other people find it.
+
+## Related tools
+
+- **[driftcheck](https://github.com/yunaremaia/driftcheck)** — detect version drift between docs and toolchain files
+- **[dotfiles-drift](https://github.com/yunaremaia/dotfiles-drift)** — detect drift in dotfiles across machines
+- **[depscan](https://github.com/yunaremaia/depscan)** — scan dependencies across multiple ecosystems
+- **[sandbox-ffi-layers](https://github.com/yunaremaia/sandbox-ffi-layers)** — layer FFI calls behind a sandbox boundary
+
+Part of a family of focused, single-purpose developer tools — each one does one thing
+and does it well.
 
 ## Contributing
 
